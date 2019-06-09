@@ -1,0 +1,705 @@
+conexao
+
+package br.com.INFORMATICA.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class conexao {
+    private Connection con;
+    
+    public Connection getConexao(){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager
+                         .getConnection("jdbc:mysql://localhost:3306/mydb",
+                                        "root",
+                                        "");
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+        	ex.printStackTrace();
+        }
+        
+        return con;
+    }
+    
+    public void fecharConexao(){
+        try {
+            con.close();
+        } catch (SQLException ex) {
+	        ex.printStackTrace();
+        }
+    }
+
+}
+
+clientes
+
+package br.com.INFORMATICA;
+
+public class Clientes {
+	private int idCadastro;
+	private String nome ;
+	private String senha ;
+	private String email ;
+	private String endereco; 
+	private String cpf ;
+	private String cep ;
+	private String rg ;
+	private String dataNascimento; 
+	private String telefone; 
+	private String celular;
+	private String sexo;
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public int getIdCadastro() {
+		return idCadastro;
+	}
+	public void setIdCadastro(int idCadastro) {
+		this.idCadastro = idCadastro;
+	}
+	public String getSenha() {
+		return senha;
+	}
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getEndereco() {
+		return endereco;
+	}
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+	public String getCpf() {
+		return cpf;
+	}
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+	public String getCep() {
+		return cep;
+	}
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+	public String getRg() {
+		return rg;
+	}
+	public void setRg(String rg) {
+		this.rg = rg;
+	}
+	public String getDataNascimento() {
+		return dataNascimento;
+	}
+	public void setDataNascimento(String dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+	public String getTelefone() {
+		return telefone;
+	}
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+	public String getSexo() {
+		return sexo;
+	}
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
+	}
+	public String getCelular() {
+		return celular;
+	}
+	public void setCelular(String celular) {
+		this.celular = celular;
+	}
+}
+
+produtos
+
+package br.com.INFORMATICA;
+
+public class Produto {
+	private int id;
+	private String nomeProduto;
+	private String descricaoProduto;
+	private String valorProduto;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getDescricaoProduto() {
+		return descricaoProduto;
+	}
+	public void setDescricaoProduto(String descricaoProduto) {
+		this.descricaoProduto = descricaoProduto;
+	}
+	public String getValorProduto() {
+		return valorProduto;
+	}
+	public void setValorProduto(String valorProduto) {
+		this.valorProduto = valorProduto;
+	}
+	public String getNomeProduto() {
+		return nomeProduto;
+	}
+	public void setNomeProduto(String nomeProduto) {
+		this.nomeProduto = nomeProduto;
+	}
+		
+	
+	
+}
+
+clienteController
+
+package br.com.INFORMATICA.controller;
+
+import br.com.INFORMATICA.Clientes;
+import br.com.INFORMATICA.dao.clienteDAO;
+
+public class ClienteController {
+	
+	public void incluirCliente(Clientes clientes) {
+		clienteDAO dao = new clienteDAO();
+		dao.incluir(clientes);
+	}
+	
+	public void excluirCliente(long id) {
+	    clienteDAO dao = new clienteDAO();
+	    dao.excluir(id);
+	    }
+	
+	public void alterarCliente(Clientes c) {
+	    clienteDAO dao = new clienteDAO();
+	    dao.alterar(c);
+	    }
+}
+
+produtoController
+
+package br.com.INFORMATICA.controller;
+
+import java.util.List;
+
+import br.com.INFORMATICA.Produto;
+import br.com.INFORMATICA.dao.produtoDAO;
+
+public class ProdutoController {
+	public List<Produto> listarProduto(){
+		produtoDAO dao = new produtoDAO();
+		return dao.listar();
+	}
+	
+	public void incluirProduto(Produto produto) {
+		produtoDAO dao = new produtoDAO();
+		dao.incluir(produto);
+	}
+	
+	public void excluirProduto(long id) {
+	    produtoDAO dao = new produtoDAO();
+	    dao.excluir(id);
+	    }
+	
+	public Produto buscarProduto(long id) {
+		produtoDAO dao = new produtoDAO();
+		return dao.buscar(id);
+	}
+	
+	public void alterarProduto(Produto p) {
+	    produtoDAO dao = new produtoDAO();
+	    dao.alterar(p);
+	    }
+}
+
+clienteDAO
+
+package br.com.INFORMATICA.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+
+import br.com.INFORMATICA.Clientes;
+
+public class clienteDAO extends conexao {
+	
+	public void incluir(Clientes cliente) {
+		 try{
+		String sql = "insert into clientes (nome,senha,email,endereco,cpf,cep,rg,dataNascimento,sexo,telefone,celular) "
+                 + "values (?,?,?,?,?,?,?,?,?,?,?)";
+		 PreparedStatement ps = getConexao().prepareStatement(sql);
+		 
+		 ps.setString(1, cliente.getNome());
+         ps.setString(2, cliente.getSenha());
+         ps.setString(3, cliente.getEmail());
+         ps.setString(4, cliente.getEndereco());
+         ps.setString(5, cliente.getCpf());
+         ps.setString(6, cliente.getCep());
+         ps.setString(7, cliente.getRg());
+         ps.setString(8, cliente.getDataNascimento());
+         ps.setString(9, cliente.getSexo());
+         ps.setString(10, cliente.getTelefone());
+         ps.setString(11, cliente.getCelular());
+         
+         ps.execute();
+         ps.close();
+	}catch(SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        fecharConexao();
+    }
+	}
+	
+	
+	
+	
+	
+	public void excluir(long id) {
+        try{
+            String sql = "delete from cliente where idCadastro = ?";
+            PreparedStatement ps = getConexao().prepareStatement(sql);
+            ps.setLong(1, id);
+            ps.execute();
+            ps.close(); 
+           }catch(SQLException e){
+                e.printStackTrace();
+          }finally{
+                fecharConexao();
+          }
+	}
+
+	
+	
+	
+	 public void alterar(Clientes c) {
+
+	        try {
+	            String sql = "update cliente set "
+	                    + " nome = ?, "
+	                    + " senha = ? "
+	                    + " email = ? "
+	                    + " endereco = ? "
+	                    + " cpf = ? "
+	                    + " cep = ? "
+	                    + " rg = ? "
+	                    + " dataNascimento = ? "
+	                    + " sexo = ? "
+	                    + " telefone = ? "
+	                    + " celular = ? "
+	                    + " where idCadastro = ?";
+
+	            PreparedStatement ps = getConexao().prepareStatement(sql);
+	            
+	            ps.setLong(1, c.getIdCadastro());
+	            ps.setString(2, c.getNome());
+	            ps.setString(3, c.getSenha());
+	            ps.setString(4, c.getEmail());
+	            ps.setString(5, c.getEndereco());
+	            ps.setString(6, c.getCpf());
+	            ps.setString(7, c.getCep());
+	            ps.setString(8, c.getRg());
+	            ps.setString(9, c.getDataNascimento());
+	            ps.setString(10, c.getSexo());
+	            ps.setString(11, c.getTelefone());
+	            ps.setString(12, c.getCelular());
+	            
+	            
+	            ps.execute();
+	            ps.close();
+	        
+	        
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            fecharConexao();
+	        }
+	 }
+}
+
+produtoDAO
+
+package br.com.INFORMATICA.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.INFORMATICA.Produto;
+
+public class produtoDAO extends conexao {
+
+	public List<Produto> listar() {
+		List<Produto> lista = new ArrayList<Produto>();
+		try {
+			String sql = "select * from produtos "
+					+ "order by nomeProduto";
+			
+			PreparedStatement ps = getConexao().
+					prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			
+			Produto p;
+			while (rs.next()) {
+				p = new Produto();
+				p.setId(rs.getInt("id"));
+				p.setNomeProduto(rs.getString("nomeProduto"));
+				p.setDescricaoProduto(rs.getString("descricaoProduto"));
+				p.setValorProduto(rs.getString("valorProduto"));
+				lista.add(p);
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return lista;
+	}
+	
+	public void incluir(Produto produto) {
+		 try{
+		String sql = "insert into produtos (nomeProduto,descricaoProduto,valorProduto) "
+                 + "values (?,?,?)";
+		 PreparedStatement ps = getConexao().prepareStatement(sql);
+		 ps.setString(1, produto.getNomeProduto());
+         ps.setString(2, produto.getDescricaoProduto());
+         ps.setString(3, produto.getValorProduto());
+         ps.execute();
+         ps.close();
+	}catch(SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        fecharConexao();
+    }
+	}
+	public void excluir(long id) {
+        try{
+            String sql = "delete from produtos where id = ?";
+            PreparedStatement ps = getConexao().prepareStatement(sql);
+            ps.setLong(1, id);
+            ps.execute();
+            ps.close(); 
+           }catch(SQLException e){
+                e.printStackTrace();
+          }finally{
+                fecharConexao();
+          }
+	}
+	public Produto buscar(long id) {
+        Produto p = new Produto();
+        
+        try {
+            String sql = "SELECT * FROM produtos al"
+                         + " where al.id = ?";
+            PreparedStatement ps = getConexao()
+                    .prepareStatement(sql);
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+            	p.setId(rs.getInt("id"));
+				p.setNomeProduto(rs.getString("nomeProduto"));
+				p.setDescricaoProduto(rs.getString("descricaoProduto"));
+				p.setValorProduto(rs.getString("valorProduto"));
+			}
+       
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } finally {
+            fecharConexao();
+        }
+        
+        return p;
+    }
+	 public void alterar(Produto p) {
+
+	        try {
+	            String sql = "update produtos set "
+	                    + " nomeProduto = ?, "
+	                    + " descricaoProduto = ? "
+	                    + " valorProduto = ? "
+	                    + " where id = ?";
+
+	            PreparedStatement ps = getConexao()
+	                    .prepareStatement(sql);
+	            ps.setString(1, p.getNomeProduto());
+	            ps.setString(2, p.getDescricaoProduto());
+	            ps.setString(3, p.getValorProduto());
+	            ps.setLong(4, p.getId());
+	            ps.execute();
+	            ps.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            fecharConexao();
+	        }
+	 }
+}
+
+CadastroCliente
+
+package br.com.INFORMATICA.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import br.com.INFORMATICA.Clientes;
+import br.com.INFORMATICA.controller.ClienteController;
+@WebServlet("/cadastroCliente")
+public class cadastroCliente extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		processar(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		processar(request, response);
+	}
+	private void processar(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		String acao = request.getParameter("acao");
+		
+		if(acao.equalsIgnoreCase("inicioInclusao")) {
+			Clientes cliente = new Clientes();
+			request.setAttribute("produto",cliente);
+			request.setAttribute("acao", "incluir");
+			
+			RequestDispatcher rd = request
+					.getRequestDispatcher("cadastro.html");
+			rd.forward(request, response);
+		}
+		
+		if(acao.equalsIgnoreCase("incluir")) {
+			
+			String nome = request.getParameter("nome");
+		    String senha = request.getParameter("senha");
+		    String email = request.getParameter("email");
+		    String endereco = request.getParameter("endereco");
+		    String cpf = request.getParameter("cpf");
+		    String cep = request.getParameter("cep");
+		    String rg = request.getParameter("rg");
+		    String dataNascimento = request.getParameter("dataNascimento");
+		    String telefone = request.getParameter("telefone");
+		    String celular = request.getParameter("celular");
+		    String sexo = request.getParameter("sexo");
+			
+			Clientes cliente = new Clientes();
+			
+			cliente.setNome(nome);
+			cliente.setSenha(senha);
+			cliente.setEmail(email);
+			cliente.setEndereco(endereco);
+			cliente.setCpf(cpf);
+			cliente.setCep(cep);
+			cliente.setRg(rg);
+			cliente.setDataNascimento(dataNascimento);
+			cliente.setTelefone(telefone);
+			cliente.setCelular(celular);
+			cliente.setSexo(sexo);
+			
+			
+			ClienteController controller = new ClienteController();
+			controller.incluirCliente(cliente);
+		
+			RequestDispatcher rd = request.getRequestDispatcher("cliente.html");
+			rd.forward(request, response);
+		}
+		
+		if (acao.equalsIgnoreCase("excluir")) {
+			int id = Integer.parseInt(request.getParameter("idCadastro"));
+			
+			ClienteController controller = new ClienteController();
+			controller.excluirCliente(id);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("cliente.html");
+			rd.forward(request, response);
+		}
+		
+		if(acao.equalsIgnoreCase("alterar")) {
+			
+			int idCadastro = Integer.parseInt(request.getParameter("idCadastro"));
+			String nome = request.getParameter("nome");
+		    String senha = request.getParameter("senha");
+		    String email = request.getParameter("email");
+		    String endereco = request.getParameter("endereco");
+		    String cpf = request.getParameter("cpf");
+		    String cep = request.getParameter("cep");
+		    String rg = request.getParameter("rg");
+		    String dataNascimento = request.getParameter("dataNascimento");
+		    String telefone = request.getParameter("telefone");
+		    String celular = request.getParameter("celular");
+		    String sexo = request.getParameter("sexo");
+			
+			Clientes cliente = new Clientes();
+			
+			cliente.setIdCadastro(idCadastro);
+			cliente.setNome(nome);
+			cliente.setSenha(senha);
+			cliente.setEmail(email);
+			cliente.setEndereco(endereco);
+			cliente.setCpf(cpf);
+			cliente.setCep(cep);
+			cliente.setRg(rg);
+			cliente.setDataNascimento(dataNascimento);
+			cliente.setTelefone(telefone);
+			cliente.setCelular(celular);
+			cliente.setSexo(sexo);
+						
+			ClienteController controller = new ClienteController();
+			controller.alterarCliente(cliente);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("cliente.html");
+			rd.forward(request, response);
+		}
+
+	}
+
+}
+
+CadastroProduto
+
+package br.com.INFORMATICA.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import br.com.INFORMATICA.Produto;
+import br.com.INFORMATICA.controller.ProdutoController;
+@WebServlet("/cadastroProduto")
+public class cadastroProduto extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+   
+    public cadastroProduto() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		processar(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		processar(request, response);
+	}
+	private void processar(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		String acao = request.getParameter("acao");
+		
+		if(acao.equalsIgnoreCase("inicioInclusao")) {
+			Produto produto = new Produto();
+			request.setAttribute("produto",produto);
+			request.setAttribute("acao", "incluir");
+			
+			RequestDispatcher rd = request
+					.getRequestDispatcher("CadastrarProduto.jsp");
+			rd.forward(request, response);
+		}
+		
+		if(acao.equalsIgnoreCase("incluir")) {
+			
+			String nomeProduto = request.getParameter("txtNomeProduto");
+			String descricaoProduto = request.getParameter("txtDescricaoProduto");
+			String valorProduto = request.getParameter("txtValorProduto");
+
+			
+			Produto produto = new Produto();
+			produto.setNomeProduto(nomeProduto);
+			produto.setDescricaoProduto(descricaoProduto);
+			produto.setValorProduto(valorProduto);
+			
+			
+			ProdutoController controller = new ProdutoController();
+			controller.incluirProduto(produto);
+		
+			RequestDispatcher rd = request.getRequestDispatcher("administrador.jsp");
+			rd.forward(request, response);
+		}
+		
+		if (acao.equalsIgnoreCase("excluir")) {
+			int id = Integer.parseInt(request.getParameter("id"));
+			
+			ProdutoController controller = new ProdutoController();
+			controller.excluirProduto(id);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("administrador.jsp");
+			rd.forward(request, response);
+		}
+		if(acao.equalsIgnoreCase("buscar")) {
+			int id = Integer.parseInt(request.getParameter("id"));
+			
+			ProdutoController controller = new ProdutoController();
+			Produto produto = controller.buscarProduto(id);
+			
+			request.setAttribute("produto",produto);
+			request.setAttribute("acao", "alterar");
+			
+			RequestDispatcher rd = request
+					.getRequestDispatcher("CadastrarProduto.jsp");
+			rd.forward(request, response);
+			
+		}
+		if(acao.equalsIgnoreCase("alterar")) {
+			int id = Integer.parseInt(request.getParameter("id"));
+			String nomeProduto = request.getParameter("txtNomeProduto");
+			String valorProduto = request.getParameter("txtValorProduto");
+			String descricaoProduto = request.getParameter("txtDescricaoProduto");
+			
+			Produto produto = new Produto();
+			produto.setId(id);
+
+			produto.setNomeProduto(nomeProduto);
+			produto.setDescricaoProduto(descricaoProduto);
+			produto.setValorProduto(valorProduto);
+			
+			ProdutoController controller = new ProdutoController();
+			controller.alterarProduto(produto);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("administrador.jsp");
+			rd.forward(request, response);
+		}
+
+	}
+
+}
+

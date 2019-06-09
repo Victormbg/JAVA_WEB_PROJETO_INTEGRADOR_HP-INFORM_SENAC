@@ -1,0 +1,159 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+html,body{
+	height: 100%;
+}
+section{
+	min-height: 100%;
+}
+
+.banner{
+	height:190px;
+	background: url("../img/banner5.jpg");
+	background-repeat: no-repeat;
+	background-size:cover;
+}
+.banner-esq{
+	float:left;
+	padding:20px;
+}
+
+.banner-esq img{
+	height:180px;
+	width:250px;
+}
+
+.banner-dir{
+	float:right;
+	padding:20px;
+}
+
+.banner-dir img{
+	margin-top:-30px;
+	height:200px;
+	width:1000px;
+		
+}
+
+.menu{
+	padding-top:30px;
+	padding-bottom:30px;
+	background-color:#33ffff;
+}
+
+
+.menu ul li {
+	display:inline;
+	padding:90px;
+	margin-left:40px
+
+}
+
+.menu ul li  a{
+	font-family:Impact, fantasy;
+	margin-left:10px;
+	color:#66ff66;
+	font-size:30px;
+	padding-left:5px;
+	text-decoration: none;
+	text-shadow: 2px 2px 2px #000;
+}
+
+.menu ul li a:hover{
+	color:#bfbfbf;
+}
+
+.conteudo{
+	width: 100%;
+	height:1400px;
+	background-color:#262626;
+	background-repeat: no-repeat;
+	background-size:cover;
+}
+.palavra {
+	padding:10px;
+	padding-top:30px;
+}
+.palavra u {color:red;}
+
+.palavra h1{
+	font-family:Stencil Std, fantasy;
+	padding:20px;
+	font-size:50px;
+	padding-left:400px;
+	text-align:center;
+	display:inline;
+	color:red ;
+}
+
+.palavra h2{
+	font-family:Stencil Std, fantasy;
+	padding-left:600px;
+	display:inline;
+	font-size:50px;
+	text-align:center;
+	color:white;
+}
+
+.imagem1  img{
+	margin-left:200px;
+	float:left;
+	padding:20px;
+	width:600px;
+}
+
+.imagem2  img{
+	margin-right:200px;
+	float:right;
+	padding:20px;
+	width:640px;
+}
+
+.anuncio img{
+	width:850px;
+	float:left;
+	margin-left:500px;
+	padding:20px;
+}
+
+.anuncio img:hover {
+  -webkit-transform: scale(3.3);
+  -moz-transform: scale(1.1);
+  -o-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+/* RODAPE */
+	
+footer{
+	height:275px;
+	background-color:#000000;
+}
+
+.rod-esq{
+	float:left;
+	margin-left:50px;
+}
+
+.rod-esq ul li{
+	font-family:Stencil Std, fantasy;
+	padding:6px;
+	color:limegreen;
+	font-size:27px;
+}
+
+.rod-dir{
+padding:10px;
+margin-right:20px;
+float:right;
+}
+
+
+
+
+
+
+
